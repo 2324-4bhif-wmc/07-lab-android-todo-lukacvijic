@@ -159,11 +159,6 @@ fun TodoRow(todo: Todo, store: ModelStore) {
             text = todo.title,
             style = MaterialTheme.typography.bodySmall
         )
-        Spacer(modifier = Modifier.width(8.dp))
-        Text(
-            text = todo.id.toString(),
-            style = MaterialTheme.typography.bodySmall
-        )
         Spacer(modifier = Modifier.weight(1f))
         Checkbox(
             checked = todo.completed,

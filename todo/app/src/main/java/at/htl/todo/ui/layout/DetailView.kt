@@ -29,6 +29,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.style.LineBreak
 import androidx.compose.ui.unit.dp
 import at.htl.todo.DetailActivity
 import at.htl.todo.MainActivity
@@ -57,14 +58,14 @@ class DetailView @Inject constructor() {
                 modifier = Modifier.fillMaxSize(),
                 color = MaterialTheme.colorScheme.background
             ) {
-                TodosTwo(model = viewModel, modifier = Modifier.padding(all = 32.dp), store)
+                DetailedTodos(model = viewModel, modifier = Modifier.padding(all = 32.dp), store)
             }
         }
     }
 }
 
 @Composable
-fun TodosTwo(model: Model, modifier: Modifier = Modifier, store: ModelStore) {
+fun DetailedTodos(model: Model, modifier: Modifier = Modifier, store: ModelStore) {
     val todos = model.todos
 
     val context = LocalContext.current
@@ -81,7 +82,7 @@ fun TodosTwo(model: Model, modifier: Modifier = Modifier, store: ModelStore) {
             BottomAppBar(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(70.dp) // Adjust the height here
+                    .height(70.dp)
             ) {
                 Row(
                     modifier = Modifier.fillMaxWidth(),
@@ -109,7 +110,7 @@ fun TodosTwo(model: Model, modifier: Modifier = Modifier, store: ModelStore) {
                 .padding(16.dp)
         ) {
             items(todos.size) { index ->
-                TodoRow(todo = todos[index], store)
+                DetailRow(todo = todos[index], store)
                 HorizontalDivider()
             }
         }
@@ -117,7 +118,7 @@ fun TodosTwo(model: Model, modifier: Modifier = Modifier, store: ModelStore) {
 }
 
 @Composable
-fun TodoRowTwo(todo: Todo, store: ModelStore) {
+fun DetailRow(todo: Todo, store: ModelStore) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -125,22 +126,41 @@ fun TodoRowTwo(todo: Todo, store: ModelStore) {
         verticalAlignment = Alignment.CenterVertically
     ) {
         Text(
-            text = todo.title,
+            text = "ID: " + todo.id.toString(),
             style = MaterialTheme.typography.bodySmall
         )
-        Spacer(modifier = Modifier.width(8.dp))
+    }
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(8.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
         Text(
-            text = todo.id.toString(),
+            text = "Title: " + todo.title,
             style = MaterialTheme.typography.bodySmall
         )
-        Spacer(modifier = Modifier.weight(1f))
-        Checkbox(
-            checked = todo.completed,
-            onCheckedChange = {
-                store.apply {
-                        m -> m.todos.filter { t -> t.id == todo.id }.first().completed = !todo.completed
-                }
-            }
+    }
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(8.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Text(
+            text = "Completed: " + todo.completed,
+            style = MaterialTheme.typography.bodySmall
+        )
+    }
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(8.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Text(
+            text = "UserID: " + todo.userId,
+            style = MaterialTheme.typography.bodySmall
         )
     }
 }
