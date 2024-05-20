@@ -5,7 +5,6 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
@@ -16,15 +15,9 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Check
-import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.BottomAppBar
-import androidx.compose.material3.Button
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.HorizontalDivider
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
@@ -34,9 +27,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rxjava3.subscribeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import at.htl.todo.DetailActivity
+import at.htl.todo.MainActivity
 import at.htl.todo.model.Model
 import at.htl.todo.model.ModelStore
 import at.htl.todo.model.Todo
@@ -45,13 +40,10 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class MainView @Inject constructor() {
+class DetailView @Inject constructor() {
 
     @Inject
     lateinit var store: ModelStore
-
-    @Inject
-    lateinit var detailView: DetailView
 
     fun buildContent(activity: ComponentActivity) {
         activity.enableEdgeToEdge()
@@ -65,37 +57,14 @@ class MainView @Inject constructor() {
                 modifier = Modifier.fillMaxSize(),
                 color = MaterialTheme.colorScheme.background
             ) {
-                Todos(model = viewModel, modifier = Modifier.padding(all = 32.dp), store)
+                TodosTwo(model = viewModel, modifier = Modifier.padding(all = 32.dp), store)
             }
         }
     }
 }
 
 @Composable
-fun BottomAppBarExample(detailView: DetailView, activity: ComponentActivity) {
-    Scaffold(
-        bottomBar = {
-            BottomAppBar(
-                actions = {
-                    TextButton(onClick = { detailView.buildContent(activity)}) {
-                        Text("Simple View")
-                    }
-                    TextButton(onClick = { detailView.buildContent(activity)}) {
-                        Text("Detailed View")
-                    }
-                }
-            )
-        },
-    ) { innerPadding ->
-        Text(
-            modifier = Modifier.padding(innerPadding),
-            text = "Example of a scaffold with a bottom app bar."
-        )
-    }
-}
-
-@Composable
-fun Todos(model: Model, modifier: Modifier = Modifier, store: ModelStore) {
+fun TodosTwo(model: Model, modifier: Modifier = Modifier, store: ModelStore) {
     val todos = model.todos
 
     val context = LocalContext.current
@@ -118,16 +87,16 @@ fun Todos(model: Model, modifier: Modifier = Modifier, store: ModelStore) {
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.Center
                 ) {
-                    TextButton(onClick = { /*TODO*/ }) {
-                        Text("Simple-View")
-                    }
-                    Spacer(modifier = Modifier.width(16.dp))
                     TextButton(onClick = {
-                        val intent = Intent(context, DetailActivity::class.java).apply {
+                        val intent = Intent(context, MainActivity::class.java).apply {
                         }
 
                         launcher.launch(intent)
                     }) {
+                        Text("Simple-View")
+                    }
+                    Spacer(modifier = Modifier.width(16.dp))
+                    TextButton(onClick = { /*TODO*/ }) {
                         Text("Detail-View")
                     }
                 }
@@ -148,7 +117,7 @@ fun Todos(model: Model, modifier: Modifier = Modifier, store: ModelStore) {
 }
 
 @Composable
-fun TodoRow(todo: Todo, store: ModelStore) {
+fun TodoRowTwo(todo: Todo, store: ModelStore) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -169,24 +138,9 @@ fun TodoRow(todo: Todo, store: ModelStore) {
             checked = todo.completed,
             onCheckedChange = {
                 store.apply {
-                    m -> m.todos.filter { t -> t.id == todo.id }.first().completed = !todo.completed
+                        m -> m.todos.filter { t -> t.id == todo.id }.first().completed = !todo.completed
                 }
             }
         )
     }
 }
-
-/*
-@Preview(showBackground = true)
-@Composable
-fun TodoPreview() {
-    val model = Model()
-    val todo = Todo()
-    todo.id = 1
-    todo.title = "First Todo"
-    model.todos = arrayOf(todo)
-
-    TodoTheme {
-        Todos(model)
-    }
-}*/
